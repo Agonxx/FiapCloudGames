@@ -20,11 +20,11 @@ namespace FiapCloudGames.Api.Middlewares
         {
             if (context.User.Identity.IsAuthenticated)
             {
-                _infoToken.Id = int.Parse(context.User.FindFirst("Id").Value);
-                _infoToken.Nome = context.User.FindFirst("Nome").Value;
-                _infoToken.Email = context.User.FindFirst("Email").Value;
-                _infoToken.Nivel = EnumExtentions.ToEnum<ETipoUsuario>(context.User.FindFirst("Nivel").Value);
-                _infoToken.CadastradoEm = DateTime.Parse(context.User.FindFirst("CadastradoEm").Value);
+                _infoToken.Id = int.Parse(context.User.FindFirst(nameof(InfoToken.Id)).Value);
+                _infoToken.Nome = context.User.FindFirst(nameof(InfoToken.Nome)).Value;
+                _infoToken.Email = context.User.FindFirst(nameof(InfoToken.Email)).Value;
+                _infoToken.Nivel = EnumExtentions.ToEnum<ETipoUsuario>(context.User.FindFirst(nameof(InfoToken.Nivel)).Value);
+                _infoToken.CadastradoEm = DateTime.Parse(context.User.FindFirst(nameof(InfoToken.CadastradoEm)).Value);
             }
 
             await _next(context);

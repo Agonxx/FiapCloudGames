@@ -26,11 +26,11 @@ namespace FiapCloudGames.Infrastructure.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {
-                new Claim("id", id.ToString()),
-                new Claim(ClaimTypes.Name, nome),
-                new Claim(ClaimTypes.Email, email),
-                new Claim("nivel", nivel.ToString()),
-                new Claim("cadastradoEm", cadastradoEm.ToString("o")),
+                new Claim(nameof(InfoToken.Id), id.ToString()),
+                new Claim(nameof(InfoToken.Nome), nome),
+                new Claim(nameof(InfoToken.Email), email),
+                new Claim(nameof(InfoToken.Nivel), nivel.ToString()),
+                new Claim(nameof(InfoToken.CadastradoEm), cadastradoEm.ToString("o")),
             }),
                 Expires = DateTime.UtcNow.AddHours(_settings.ExpiracaoHoras),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

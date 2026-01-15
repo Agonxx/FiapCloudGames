@@ -29,16 +29,12 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<CorrelationIdMiddleware>()
     .UseMiddleware<ExceptionMiddleware>()
     .UseMiddleware<RequestLoggingMiddleware>()
-    .UseMiddleware<JwtMiddleware>()
     .UseCors("DefaultCors")
     .UseHttpsRedirection()
     .UseAuthentication()
     .UseAuthorization();
 
-app.UseCors("AllowAllOrigins");
-app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseMiddleware<JwtMiddleware>();
 
 app.MapControllers();
 

@@ -12,7 +12,7 @@ namespace FiapCloudGames.Api.Controllers;
 [Authorize]
 public abstract class BaseController : ControllerBase
 {
-    protected readonly InfoToken _infoToken;
+    public readonly InfoToken _infoToken;
 
     public BaseController(IHttpContextAccessor httpContextAccessor, InfoToken infoToken)
     {

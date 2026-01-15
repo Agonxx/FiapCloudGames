@@ -1,4 +1,5 @@
-﻿using FiapCloudGames.Domain.Entities;
+﻿using FiapCloudGames.Domain.DTOs;
+using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Interfaces.Repositories;
 using FiapCloudGames.Domain.Utils;
 
@@ -6,12 +7,14 @@ namespace FiapCloudGames.Application.Services
 {
     public class UsuarioService
     {
-        private readonly IUsuarioRepository _repo;
+        public readonly IUsuarioRepository _repo;
         public readonly CryptoUtils _cryptoUtils;
-        public UsuarioService(IUsuarioRepository repo, CryptoUtils cryptoUtils)
+        public readonly InfoToken _infoToken;
+        public UsuarioService(IUsuarioRepository repo, CryptoUtils cryptoUtils, InfoToken infoToken)
         {
             _repo = repo;
             _cryptoUtils = cryptoUtils;
+            _infoToken = infoToken;
         }
 
         public async Task<string> Autenticar(string email, string senha)
