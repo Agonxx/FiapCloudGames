@@ -13,24 +13,21 @@ namespace FiapCloudGames.Infrastructure.Data.ContextConfig
              {
                 new Usuario {
                     Id = 1,
-                    Nome="Rafael Santos",
-                    Email="rafhita1@gmail.com",
-                    Nivel= ETipoUsuario.Administrador,
-                    Senha ="jx2A6WDVUKiccfcAYTCJJg=="//R123
-                },
-                new Usuario {
-                    Id = 2,
                     Nome = "Admin FCG",
                     Email = "admin@fcg.com",
                     Nivel= ETipoUsuario.Administrador,
-                    Senha = "IuL0vUhf2mtqMeh2otN5GQ=="//A123
+                    SenhaHash = "IuL0vUhf2mtqMeh2otN5GQ==",//A123
+                    CadastradoEm = DateTime.Now.AddDays(-25),
+                    Ativo = true
                 },
                 new Usuario {
-                    Id = 3,
+                    Id = 2,
                     Nome = "User FCG",
                     Email = "user@fcg.com",
                     Nivel= ETipoUsuario.Usuario,
-                    Senha = "BxZkP2nHgsa2DbpyDZLDRQ=="//U123
+                    SenhaHash = "BxZkP2nHgsa2DbpyDZLDRQ==",//U123
+                    CadastradoEm = DateTime.Now.AddDays(-5),
+                    Ativo = true
                 },
             });
         }

@@ -12,7 +12,7 @@ public class FCGDbContext : DbContext
 
     public DbSet<Jogo> Jogos { get; set; }
     public DbSet<Usuario> Usuarios { get; set; }
-    public DbSet<UsuarioJogo> UsuarioJogos { get; set; }
+    public DbSet<ItemBiblioteca> ItensBiblioteca { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

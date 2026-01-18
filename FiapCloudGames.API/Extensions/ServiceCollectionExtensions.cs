@@ -24,10 +24,16 @@ namespace FiapCloudGames.Api.Extensions
             services.Configure<JwtSettings>(aaa);
 
             services.AddScoped<UsuarioService>();
+            services.AddScoped<JogoService>();
+            services.AddScoped<BibliotecaService>();
+
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IJogoRepository, JogoRepository>();
+            services.AddScoped<IBibliotecaRepository, BibliotecaRepository>();
+
+            services.AddScoped<ITokenService, TokenService>();
 
             services.AddScoped<CryptoUtils>();
-            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<InfoToken>();
 
             return services;

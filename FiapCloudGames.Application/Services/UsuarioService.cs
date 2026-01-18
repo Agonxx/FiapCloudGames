@@ -17,21 +17,52 @@ namespace FiapCloudGames.Application.Services
             _infoToken = infoToken;
         }
 
-        public async Task<string> Autenticar(string email, string senha)
+        public async Task<string> AuthAsync(string email, string senha)
         {
             var senhaCrypto = _cryptoUtils.EncryptString(senha);
-
-            var token = await _repo.Autenticar(email, senhaCrypto);
+            var token = await _repo.Auth(email, senhaCrypto);
 
             return token;
         }
 
-        public async Task<bool> CadastrarAsync(Usuario usuarioObj)
+        public async Task<Usuario> GetByIdAsync(int id)
         {
-            usuarioObj.Senha = _cryptoUtils.EncryptString(usuarioObj.Senha);
+            var user = await _repo.GetById(id);
+            return user;
+        }
 
-            await _repo.Cadastrar(usuarioObj);
-            return true;
+        public async Task<Usuario> GetMeAsync()
+        {
+            var user = await _repo.GetMe();
+            return user;
+        }
+
+        public async Task<List<Usuario>> GetAllAsync()
+        {
+            var users = await _repo.GetAll();
+            return users;
+        }
+
+        public async Task<bool> CreateAsync(Usuario usuarioObj)
+        {
+            usuarioObj.SenhaHash = _cryptoUtils.EncryptString(usuarioObj.SenhaHash);
+
+            var ret = await _repo.Create(usuarioObj);
+            return ret;
+        }
+
+        public async Task<bool> UpdateAsync(Usuario usuarioObj)
+        {
+            usuarioObj.SenhaHash = _cryptoUtils.EncryptString(usuarioObj.SenhaHash);
+
+            var ret = await _repo.Update(usuarioObj);
+            return ret;
+        }
+
+        public async Task<bool> DeleteByIdAsync(int id)
+        {
+            var ret = await _repo.DeleteById(id);
+            return ret;
         }
     }
 }

@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FiapCloudGames.Infrastructure.Data.ContextConfig
 {
-    public class ConfigUsuarioJogo : IEntityTypeConfiguration<UsuarioJogo>
+    public class ConfigUsuarioJogo : IEntityTypeConfiguration<ItemBiblioteca>
     {
-        public void Configure(EntityTypeBuilder<UsuarioJogo> builder)
+        public void Configure(EntityTypeBuilder<ItemBiblioteca> builder)
         {
             builder.HasOne<Usuario>()
                .WithMany()

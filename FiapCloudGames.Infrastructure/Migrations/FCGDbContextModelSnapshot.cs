@@ -22,6 +22,36 @@ namespace FiapCloudGames.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("FiapCloudGames.Domain.Entities.ItemBiblioteca", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AdiquiridoEm")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("JogoId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("PrecoPago")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JogoId");
+
+                    b.HasIndex("UsuarioId", "JogoId")
+                        .IsUnique();
+
+                    b.ToTable("ItensBiblioteca");
+                });
+
             modelBuilder.Entity("FiapCloudGames.Domain.Entities.Jogo", b =>
                 {
                     b.Property<int>("Id")
@@ -34,15 +64,21 @@ namespace FiapCloudGames.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Descricao")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<decimal>("Preco")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Titulo")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Titulo");
 
                     b.ToTable("Jogos");
 
@@ -50,7 +86,7 @@ namespace FiapCloudGames.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CadastradoEm = new DateTime(2026, 1, 15, 0, 39, 20, 590, DateTimeKind.Local).AddTicks(1280),
+                            CadastradoEm = new DateTime(2026, 1, 18, 16, 3, 12, 440, DateTimeKind.Local).AddTicks(643),
                             Descricao = "RPG",
                             Preco = 249.90m,
                             Titulo = "Elden Ring"
@@ -58,7 +94,7 @@ namespace FiapCloudGames.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            CadastradoEm = new DateTime(2026, 1, 15, 0, 39, 20, 591, DateTimeKind.Local).AddTicks(1252),
+                            CadastradoEm = new DateTime(2026, 1, 18, 16, 3, 12, 441, DateTimeKind.Local).AddTicks(757),
                             Descricao = "Esporte",
                             Preco = 249.90m,
                             Titulo = "EA FC 26"
@@ -73,22 +109,34 @@ namespace FiapCloudGames.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("CadastradoEm")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<int>("Nivel")
                         .HasColumnType("int");
 
                     b.Property<string>("Nome")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
-                    b.Property<string>("Senha")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("SenhaHash")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Usuarios");
 
@@ -96,59 +144,26 @@ namespace FiapCloudGames.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CadastradoEm = new DateTime(2026, 1, 15, 3, 39, 20, 591, DateTimeKind.Utc).AddTicks(5431),
-                            Email = "rafhita1@gmail.com",
+                            Ativo = true,
+                            CadastradoEm = new DateTime(2025, 12, 24, 16, 3, 12, 441, DateTimeKind.Local).AddTicks(5666),
+                            Email = "admin@fcg.com",
                             Nivel = 2,
-                            Nome = "Rafael Santos",
-                            Senha = "jx2A6WDVUKiccfcAYTCJJg=="
+                            Nome = "Admin FCG",
+                            SenhaHash = "IuL0vUhf2mtqMeh2otN5GQ=="
                         },
                         new
                         {
                             Id = 2,
-                            CadastradoEm = new DateTime(2026, 1, 15, 3, 39, 20, 591, DateTimeKind.Utc).AddTicks(5874),
-                            Email = "admin@fcg.com",
-                            Nivel = 2,
-                            Nome = "Admin FCG",
-                            Senha = "IuL0vUhf2mtqMeh2otN5GQ=="
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CadastradoEm = new DateTime(2026, 1, 15, 3, 39, 20, 591, DateTimeKind.Utc).AddTicks(5875),
+                            Ativo = true,
+                            CadastradoEm = new DateTime(2026, 1, 13, 16, 3, 12, 441, DateTimeKind.Local).AddTicks(5880),
                             Email = "user@fcg.com",
                             Nivel = 1,
                             Nome = "User FCG",
-                            Senha = "BxZkP2nHgsa2DbpyDZLDRQ=="
+                            SenhaHash = "BxZkP2nHgsa2DbpyDZLDRQ=="
                         });
                 });
 
-            modelBuilder.Entity("FiapCloudGames.Domain.Entities.UsuarioJogo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AdiquiridoEm")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("JogoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("JogoId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("UsuarioJogos");
-                });
-
-            modelBuilder.Entity("FiapCloudGames.Domain.Entities.UsuarioJogo", b =>
+            modelBuilder.Entity("FiapCloudGames.Domain.Entities.ItemBiblioteca", b =>
                 {
                     b.HasOne("FiapCloudGames.Domain.Entities.Jogo", null)
                         .WithMany()
