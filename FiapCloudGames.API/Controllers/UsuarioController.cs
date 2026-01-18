@@ -2,7 +2,7 @@
 using FiapCloudGames.Domain.Constants;
 using FiapCloudGames.Domain.DTOs;
 using FiapCloudGames.Domain.Entities;
-using FiapCloudGames.Domain.Utils;
+using FiapCloudGames.Domain.Interfaces.Utils;
 using LibraryApi.Bases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +12,12 @@ namespace FiapCloudGames.Api.Controllers;
 public class UsuarioController : BaseController
 {
     private readonly UsuarioService _service;
-    public readonly CryptoUtils _cryptoUtils;
+    public readonly ICryptoUtils _cryptoUtils;
 
 
     public UsuarioController(IHttpContextAccessor httpContextAccessor,
                                 UsuarioService service,
-                                CryptoUtils cryptoUtils,
+                                ICryptoUtils cryptoUtils,
                                 InfoToken infoToken) : base(httpContextAccessor, infoToken)
     {
         _service = service;

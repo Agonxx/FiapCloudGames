@@ -2,6 +2,7 @@
 using FiapCloudGames.Domain.DTOs;
 using FiapCloudGames.Domain.Interfaces.Repositories;
 using FiapCloudGames.Domain.Interfaces.Services;
+using FiapCloudGames.Domain.Interfaces.Utils;
 using FiapCloudGames.Domain.Utils;
 using FiapCloudGames.Infrastructure.Data;
 using FiapCloudGames.Infrastructure.Repositories;
@@ -33,7 +34,7 @@ namespace FiapCloudGames.Api.Extensions
 
             services.AddScoped<ITokenService, TokenService>();
 
-            services.AddScoped<CryptoUtils>();
+            services.AddScoped<ICryptoUtils, CryptoUtils>();
             services.AddScoped<InfoToken>();
 
             return services;

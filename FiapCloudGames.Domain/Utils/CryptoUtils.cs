@@ -1,9 +1,10 @@
-﻿using System.Security.Cryptography;
+﻿using FiapCloudGames.Domain.Interfaces.Utils;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace FiapCloudGames.Domain.Utils
 {
-    public class CryptoUtils
+    public class CryptoUtils : ICryptoUtils
     {
         private static readonly string key = "7F3D9A1B4C6E8F2D";
         private static readonly string iv = "1A2B3C4D5E6F7A8B";

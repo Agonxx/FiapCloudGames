@@ -1,16 +1,16 @@
 ﻿using FiapCloudGames.Domain.DTOs;
 using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Interfaces.Repositories;
-using FiapCloudGames.Domain.Utils;
+using FiapCloudGames.Domain.Interfaces.Utils;
 
 namespace FiapCloudGames.Application.Services
 {
     public class UsuarioService
     {
         public readonly IUsuarioRepository _repo;
-        public readonly CryptoUtils _cryptoUtils;
+        public readonly ICryptoUtils _cryptoUtils;
         public readonly InfoToken _infoToken;
-        public UsuarioService(IUsuarioRepository repo, CryptoUtils cryptoUtils, InfoToken infoToken)
+        public UsuarioService(IUsuarioRepository repo, ICryptoUtils cryptoUtils, InfoToken infoToken)
         {
             _repo = repo;
             _cryptoUtils = cryptoUtils;
