@@ -32,6 +32,15 @@ namespace FiapCloudGames.Application.Services
         public async Task<bool> BuyGameAsync(int gameId)
         {
             var game = await _repoGame.GetById(gameId);
+
+            if (game is null)
+                throw new Exception("Jogo não encontrado");
+
+            var existe = await _repo.ExistsInLibrary(_infoToken.Id, gameId);
+
+            if (existe)
+                throw new Exception("Você já possui esse jogo em sua biblioteca");
+
             var item = new ItemBiblioteca
             {
                 JogoId = game.Id,

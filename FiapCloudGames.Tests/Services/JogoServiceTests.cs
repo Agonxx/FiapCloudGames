@@ -110,6 +110,7 @@ namespace FiapCloudGames.Tests.Services
                 Preco = 299.90m
             };
 
+            _repoMock.Setup(r => r.GetById(jogo.Id)).ReturnsAsync(jogo);
             _repoMock.Setup(r => r.Update(jogo)).ReturnsAsync(true);
 
             // Act

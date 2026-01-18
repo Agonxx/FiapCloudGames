@@ -1,8 +1,5 @@
-﻿using FiapCloudGames.Domain.DTOs;
-using FiapCloudGames.Domain.Entities;
+﻿using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Interfaces.Repositories;
-using FiapCloudGames.Domain.Interfaces.Services;
-using FiapCloudGames.Domain.Utils;
 using FiapCloudGames.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,28 +7,22 @@ namespace FiapCloudGames.Infrastructure.Repositories
 {
     public class JogoRepository : IJogoRepository
     {
-        public readonly FCGDbContext _db;
-        public readonly InfoToken _infoToken;
-        public JogoRepository(FCGDbContext db, InfoToken infoToken)
+        private readonly FCGDbContext _db;
+
+        public JogoRepository(FCGDbContext db)
         {
             _db = db;
-            _infoToken = infoToken;
         }
 
         public async Task<List<Jogo>> GetAll()
         {
-            var listJogos = await _db.Jogos.ToListAsync();
-            return listJogos;
+            return await _db.Jogos.ToListAsync();
         }
 
         public async Task<Jogo> GetById(int id)
         {
-            var jogoObj = await _db.Jogos.Where(u => u.Id == id).FirstOrDefaultAsync();
-
-            if (jogoObj is null)
-                throw new Exception("Jogo não encontrado");
-
-            return jogoObj;
+            var jogo = await _db.Jogos.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return jogo;
         }
 
         public async Task<bool> DeleteById(int id)
@@ -43,7 +34,7 @@ namespace FiapCloudGames.Infrastructure.Repositories
         public async Task<bool> Create(Jogo jogoObj)
         {
             _db.Jogos.Add(jogoObj);
-            var changes = _db.SaveChanges();
+            var changes = await _db.SaveChangesAsync();
 
             return changes > 0;
         }
@@ -51,7 +42,7 @@ namespace FiapCloudGames.Infrastructure.Repositories
         public async Task<bool> Update(Jogo jogoObj)
         {
             _db.Jogos.Update(jogoObj);
-            var changes = _db.SaveChanges();
+            var changes = await _db.SaveChangesAsync();
 
             return changes > 0;
         }

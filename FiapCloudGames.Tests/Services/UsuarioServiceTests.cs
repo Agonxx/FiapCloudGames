@@ -3,6 +3,7 @@ using FiapCloudGames.Domain.DTOs;
 using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Enums;
 using FiapCloudGames.Domain.Interfaces.Repositories;
+using FiapCloudGames.Domain.Interfaces.Services;
 using FiapCloudGames.Domain.Interfaces.Utils;
 using Moq;
 
@@ -12,15 +13,15 @@ namespace FiapCloudGames.Tests.Services
     {
         private readonly Mock<IUsuarioRepository> _repoMock;
         private readonly Mock<ICryptoUtils> _cryptoMock;
-        private readonly InfoToken _infoToken;
+        private readonly Mock<ITokenService> _tokenServiceMock;
         private readonly UsuarioService _service;
 
         public UsuarioServiceTests()
         {
             _repoMock = new Mock<IUsuarioRepository>();
             _cryptoMock = new Mock<ICryptoUtils>();
-            _infoToken = new InfoToken();
-            _service = new UsuarioService(_repoMock.Object, _cryptoMock.Object, _infoToken);
+            _tokenServiceMock = new Mock<ITokenService>();
+            _service = new UsuarioService(_repoMock.Object, _cryptoMock.Object, _tokenServiceMock.Object);
         }
 
         [Fact]
@@ -31,9 +32,18 @@ namespace FiapCloudGames.Tests.Services
             var senha = "A123";
             var senhaCrypto = "encrypted123";
             var tokenEsperado = "jwt-token-123";
+            var usuario = new Usuario
+            {
+                Id = 1,
+                Nome = "Admin",
+                Email = email,
+                Nivel = ETipoUsuario.Administrador,
+                CadastradoEm = DateTime.UtcNow
+            };
 
             _cryptoMock.Setup(c => c.EncryptString(senha)).Returns(senhaCrypto);
-            _repoMock.Setup(r => r.Auth(email, senhaCrypto)).ReturnsAsync(tokenEsperado);
+            _repoMock.Setup(r => r.GetByEmailAndPassword(email, senhaCrypto)).ReturnsAsync(usuario);
+            _tokenServiceMock.Setup(t => t.GerarToken(usuario.Id, usuario.Nome, usuario.Email, usuario.Nivel, usuario.CadastradoEm)).Returns(tokenEsperado);
 
             // Act
             var resultado = await _service.AuthAsync(email, senha);
@@ -41,7 +51,7 @@ namespace FiapCloudGames.Tests.Services
             // Assert
             Assert.Equal(tokenEsperado, resultado);
             _cryptoMock.Verify(c => c.EncryptString(senha), Times.Once);
-            _repoMock.Verify(r => r.Auth(email, senhaCrypto), Times.Once);
+            _repoMock.Verify(r => r.GetByEmailAndPassword(email, senhaCrypto), Times.Once);
         }
 
         [Fact]
@@ -126,6 +136,7 @@ namespace FiapCloudGames.Tests.Services
             };
             var senhaCrypto = "senhaCriptografada";
 
+            _repoMock.Setup(r => r.EmailExists(novoUsuario.Email, 0)).ReturnsAsync(false);
             _cryptoMock.Setup(c => c.EncryptString("senha123")).Returns(senhaCrypto);
             _repoMock.Setup(r => r.Create(It.Is<Usuario>(u => u.SenhaHash == senhaCrypto))).ReturnsAsync(true);
 
@@ -152,6 +163,8 @@ namespace FiapCloudGames.Tests.Services
             };
             var senhaCrypto = "novaSenhaCrypto";
 
+            _repoMock.Setup(r => r.GetById(usuario.Id)).ReturnsAsync(usuario);
+            _repoMock.Setup(r => r.EmailExists(usuario.Email, usuario.Id)).ReturnsAsync(false);
             _cryptoMock.Setup(c => c.EncryptString("novaSenha")).Returns(senhaCrypto);
             _repoMock.Setup(r => r.Update(It.Is<Usuario>(u => u.SenhaHash == senhaCrypto))).ReturnsAsync(true);
 

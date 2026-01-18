@@ -56,15 +56,15 @@ namespace FiapCloudGames.Infrastructure.Repositories
 
         public async Task<bool> BuyGame(ItemBiblioteca item)
         {
-            var existe = await _db.ItensBiblioteca.AnyAsync(x => x.UsuarioId == item.UsuarioId && x.JogoId == item.JogoId);
-            
-            if (existe)
-                throw new Exception("Você já possui esse jogo em sua biblioteca");
-
             _db.ItensBiblioteca.Add(item);
-            var changes = _db.SaveChanges();
+            var changes = await _db.SaveChangesAsync();
 
             return changes > 0;
+        }
+
+        public async Task<bool> ExistsInLibrary(int usuarioId, int jogoId)
+        {
+            return await _db.ItensBiblioteca.AnyAsync(x => x.UsuarioId == usuarioId && x.JogoId == jogoId);
         }
 
     }

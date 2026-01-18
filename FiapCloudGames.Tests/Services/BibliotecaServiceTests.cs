@@ -114,6 +114,7 @@ namespace FiapCloudGames.Tests.Services
             };
 
             _repoGameMock.Setup(r => r.GetById(gameId)).ReturnsAsync(jogo);
+            _repoMock.Setup(r => r.ExistsInLibrary(_infoToken.Id, gameId)).ReturnsAsync(false);
             _repoMock.Setup(r => r.BuyGame(It.Is<ItemBiblioteca>(i =>
                 i.JogoId == gameId &&
                 i.UsuarioId == _infoToken.Id &&
@@ -126,6 +127,7 @@ namespace FiapCloudGames.Tests.Services
             // Assert
             Assert.True(resultado);
             _repoGameMock.Verify(r => r.GetById(gameId), Times.Once);
+            _repoMock.Verify(r => r.ExistsInLibrary(_infoToken.Id, gameId), Times.Once);
             _repoMock.Verify(r => r.BuyGame(It.IsAny<ItemBiblioteca>()), Times.Once);
         }
 
@@ -141,9 +143,10 @@ namespace FiapCloudGames.Tests.Services
                 Preco = 299.90m
             };
 
-            ItemBiblioteca itemCapturado = null;
+            ItemBiblioteca? itemCapturado = null;
 
             _repoGameMock.Setup(r => r.GetById(gameId)).ReturnsAsync(jogo);
+            _repoMock.Setup(r => r.ExistsInLibrary(_infoToken.Id, gameId)).ReturnsAsync(false);
             _repoMock.Setup(r => r.BuyGame(It.IsAny<ItemBiblioteca>()))
                 .Callback<ItemBiblioteca>(item => itemCapturado = item)
                 .ReturnsAsync(true);
@@ -166,6 +169,7 @@ namespace FiapCloudGames.Tests.Services
             var jogo = new Jogo { Id = gameId, Titulo = "Jogo", Preco = 100m };
 
             _repoGameMock.Setup(r => r.GetById(gameId)).ReturnsAsync(jogo);
+            _repoMock.Setup(r => r.ExistsInLibrary(_infoToken.Id, gameId)).ReturnsAsync(false);
             _repoMock.Setup(r => r.BuyGame(It.IsAny<ItemBiblioteca>())).ReturnsAsync(false);
 
             // Act
@@ -180,10 +184,26 @@ namespace FiapCloudGames.Tests.Services
         {
             // Arrange
             var gameId = 999;
-            _repoGameMock.Setup(r => r.GetById(gameId)).ThrowsAsync(new Exception("Jogo nao encontrado"));
+            _repoGameMock.Setup(r => r.GetById(gameId)).ReturnsAsync((Jogo?)null);
 
             // Act & Assert
-            await Assert.ThrowsAsync<Exception>(() => _service.BuyGameAsync(gameId));
+            var ex = await Assert.ThrowsAsync<Exception>(() => _service.BuyGameAsync(gameId));
+            Assert.Equal("Jogo não encontrado", ex.Message);
+        }
+
+        [Fact]
+        public async Task BuyGameAsync_DeveLancarExcecao_QuandoJogoJaExisteNaBiblioteca()
+        {
+            // Arrange
+            var gameId = 1;
+            var jogo = new Jogo { Id = gameId, Titulo = "Elden Ring", Preco = 249.90m };
+
+            _repoGameMock.Setup(r => r.GetById(gameId)).ReturnsAsync(jogo);
+            _repoMock.Setup(r => r.ExistsInLibrary(_infoToken.Id, gameId)).ReturnsAsync(true);
+
+            // Act & Assert
+            var ex = await Assert.ThrowsAsync<Exception>(() => _service.BuyGameAsync(gameId));
+            Assert.Equal("Você já possui esse jogo em sua biblioteca", ex.Message);
         }
     }
 }

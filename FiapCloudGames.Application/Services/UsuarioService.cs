@@ -1,39 +1,53 @@
 ﻿using FiapCloudGames.Domain.DTOs;
 using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Interfaces.Repositories;
+using FiapCloudGames.Domain.Interfaces.Services;
 using FiapCloudGames.Domain.Interfaces.Utils;
 
 namespace FiapCloudGames.Application.Services
 {
     public class UsuarioService
     {
-        public readonly IUsuarioRepository _repo;
-        public readonly ICryptoUtils _cryptoUtils;
-        public readonly InfoToken _infoToken;
-        public UsuarioService(IUsuarioRepository repo, ICryptoUtils cryptoUtils, InfoToken infoToken)
+        private readonly IUsuarioRepository _repo;
+        private readonly ICryptoUtils _cryptoUtils;
+        private readonly ITokenService _tokenService;
+
+        public UsuarioService(IUsuarioRepository repo, ICryptoUtils cryptoUtils, ITokenService tokenService)
         {
             _repo = repo;
             _cryptoUtils = cryptoUtils;
-            _infoToken = infoToken;
+            _tokenService = tokenService;
         }
 
         public async Task<string> AuthAsync(string email, string senha)
         {
             var senhaCrypto = _cryptoUtils.EncryptString(senha);
-            var token = await _repo.Auth(email, senhaCrypto);
+            var usuario = await _repo.GetByEmailAndPassword(email, senhaCrypto);
 
+            if (usuario is null)
+                throw new Exception("Usuário não encontrado");
+
+            var token = _tokenService.GerarToken(usuario.Id, usuario.Nome, usuario.Email, usuario.Nivel, usuario.CadastradoEm);
             return token;
         }
 
         public async Task<Usuario> GetByIdAsync(int id)
         {
             var user = await _repo.GetById(id);
+
+            if (user is null)
+                throw new Exception("Usuário não encontrado");
+
             return user;
         }
 
         public async Task<Usuario> GetMeAsync()
         {
             var user = await _repo.GetMe();
+
+            if (user is null)
+                throw new Exception("Usuário não encontrado");
+
             return user;
         }
 
@@ -45,6 +59,11 @@ namespace FiapCloudGames.Application.Services
 
         public async Task<bool> CreateAsync(Usuario usuarioObj)
         {
+            var emailExiste = await _repo.EmailExists(usuarioObj.Email);
+
+            if (emailExiste)
+                throw new Exception("Email já cadastrado no sistema");
+
             usuarioObj.SenhaHash = _cryptoUtils.EncryptString(usuarioObj.SenhaHash);
 
             var ret = await _repo.Create(usuarioObj);
@@ -53,6 +72,16 @@ namespace FiapCloudGames.Application.Services
 
         public async Task<bool> UpdateAsync(Usuario usuarioObj)
         {
+            var existe = await _repo.GetById(usuarioObj.Id);
+
+            if (existe is null)
+                throw new Exception("Usuário não encontrado");
+
+            var emailExiste = await _repo.EmailExists(usuarioObj.Email, usuarioObj.Id);
+
+            if (emailExiste)
+                throw new Exception("Email já cadastrado no sistema");
+
             usuarioObj.SenhaHash = _cryptoUtils.EncryptString(usuarioObj.SenhaHash);
 
             var ret = await _repo.Update(usuarioObj);
@@ -61,6 +90,9 @@ namespace FiapCloudGames.Application.Services
 
         public async Task<bool> DeleteByIdAsync(int id)
         {
+            if (id <= 0)
+                return false;
+
             var ret = await _repo.DeleteById(id);
             return ret;
         }

@@ -8,5 +8,6 @@ namespace FiapCloudGames.Domain.Interfaces.Repositories
         Task<List<JogoDto>> GetUserGamesById(int id);
         Task<List<JogoDto>> GetMyGames();
         Task<bool> BuyGame(ItemBiblioteca item);
+        Task<bool> ExistsInLibrary(int usuarioId, int jogoId);
     }
 }
