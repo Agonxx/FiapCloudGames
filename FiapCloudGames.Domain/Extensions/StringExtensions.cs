@@ -1,6 +1,6 @@
 ﻿namespace FiapCloudGames.Domain.Extensions
 {
-    public static class StringExtentions
+    public static class StringExtensions
     {
         public static bool IsNullOrEmpty(this string? value)
         {

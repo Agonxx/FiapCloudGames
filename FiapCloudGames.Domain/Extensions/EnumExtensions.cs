@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace FiapCloudGames.Domain.Extensions
 {
-    public static class EnumExtentions
+    public static class EnumExtensions
     {
         public static string GetDescription(this Enum value)
         {

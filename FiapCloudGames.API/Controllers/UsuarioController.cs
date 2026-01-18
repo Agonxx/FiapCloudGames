@@ -24,11 +24,11 @@ public class UsuarioController : BaseController
         _cryptoUtils = cryptoUtils;
     }
 
-    [HttpGet(UsuarioApi.Auth)]
+    [HttpPost(UsuarioApi.Auth)]
     [AllowAnonymous]
-    public async Task<IActionResult> Auth([FromQuery] string user, string senha)
+    public async Task<IActionResult> Auth([FromBody] LoginRequest login)
     {
-        var obj = await _service.AuthAsync(user, senha);
+        var obj = await _service.AuthAsync(login.Email, login.Senha);
         return Ok(obj);
     }
 

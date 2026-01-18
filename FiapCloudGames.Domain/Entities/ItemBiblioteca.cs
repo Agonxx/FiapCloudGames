@@ -17,7 +17,7 @@ namespace FiapCloudGames.Domain.Entities
         [Column(TypeName = "decimal(18,2)")]
         public decimal PrecoPago { get; set; }
         [Required]
-        public DateTime AdiquiridoEm { get; set; } = DateTime.UtcNow;
+        public DateTime AdquiridoEm { get; set; } = DateTime.UtcNow;
     }
 
     public class ItemBibliotecaApi

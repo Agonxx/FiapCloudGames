@@ -23,7 +23,7 @@ namespace FiapCloudGames.Api.Middlewares
                 _infoToken.Id = int.Parse(context.User.FindFirst(nameof(InfoToken.Id)).Value);
                 _infoToken.Nome = context.User.FindFirst(nameof(InfoToken.Nome)).Value;
                 _infoToken.Email = context.User.FindFirst(nameof(InfoToken.Email)).Value;
-                _infoToken.Nivel = EnumExtentions.ToEnum<ETipoUsuario>(context.User.FindFirst(nameof(InfoToken.Nivel)).Value);
+                _infoToken.Nivel = EnumExtensions.ToEnum<ETipoUsuario>(context.User.FindFirst(nameof(InfoToken.Nivel)).Value);
                 _infoToken.CadastradoEm = DateTime.Parse(context.User.FindFirst(nameof(InfoToken.CadastradoEm)).Value);
             }
 

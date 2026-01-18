@@ -29,7 +29,7 @@ namespace FiapCloudGames.Infrastructure.Repositories
                                    Titulo = games.Titulo,
                                    Descricao = games.Descricao,
                                    PrecoPago = userGame.PrecoPago,
-                                   AdiquiridoEm = userGame.AdiquiridoEm
+                                   AdquiridoEm = userGame.AdquiridoEm
                                }).ToListAsync();
 
             return jogos;
@@ -48,7 +48,7 @@ namespace FiapCloudGames.Infrastructure.Repositories
                                        Descricao = games.Descricao,
                                        Preco = games.Preco,
                                        PrecoPago = userGame.PrecoPago,
-                                       AdiquiridoEm = userGame.AdiquiridoEm
+                                       AdquiridoEm = userGame.AdquiridoEm
                                    }).ToListAsync();
 
             return meusJogos;

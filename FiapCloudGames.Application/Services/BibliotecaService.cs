@@ -37,7 +37,7 @@ namespace FiapCloudGames.Application.Services
                 JogoId = game.Id,
                 UsuarioId = _infoToken.Id,
                 PrecoPago = game.Preco,
-                AdiquiridoEm = DateTime.UtcNow
+                AdquiridoEm = DateTime.UtcNow
             };
 
             var result = await _repo.BuyGame(item);
